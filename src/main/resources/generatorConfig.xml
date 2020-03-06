@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--<classPathEntry location="/Program Files/IBM/SQLLIB/java/db2java.zip" />-->
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://120.26.48.169/conference"
+                        userId="root"
+                        password="123456">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!--生成的包的位置-->
+        <javaModelGenerator targetPackage="com.zgsu.graduation.model" targetProject="src/main/java">
+           <!--如果没有对应包，则会自动生成-->
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapping"  targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zgsu.graduation.mapper"  targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--<table  tableName="department" domainObjectName="Department" ></table>-->
+        <!--<table  tableName="user_info" domainObjectName="UserInfo" ></table>-->
+<!--        <table  tableName="room" domainObjectName="Room" ></table>-->
+        <!--<table  tableName="role" domainObjectName="Role" ></table>-->
+        <!--<table  tableName="permission" domainObjectName="Permission" ></table>-->
+        <table tableName="conference_appointment" domainObjectName="ConferenceAppointment"></table>
+<!--        <table tableName="appointment_conditions" domainObjectName="AppointmentConditions"></table>-->
+<!--        <table tableName="conference_participant" domainObjectName="ConferenceParticipant"></table>-->
+        <!--数据库字段驼峰映射到项目中-->
+        <!--<property name="useActualColumnNames" value="false"/>-->
+        <!--<generatedKey column="ID" sqlStatement="DB2" identity="true" />-->
+        <!--<columnOverride column="DATE_FIELD" property="startDate" />-->
+        <!--<ignoreColumn column="FRED" />-->
+        <!--<columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
+
+
+    </context>
+</generatorConfiguration>
