@@ -18,6 +18,7 @@
         <java.version>1.8</java.version>
     </properties>
 
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,6 +39,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.4.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -48,6 +55,7 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
+
         </dependency>
         <!--虹软-->
         <dependency>
@@ -72,6 +80,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>2.7.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
         <dependency>
@@ -79,8 +93,31 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>2.7.0</version>
         </dependency>
-    </dependencies>
 
+        <dependency>
+            <groupId>io.goeasy</groupId>
+            <artifactId>goeasy-sdk</artifactId>
+            <version>0.3.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gexin.platform</groupId>
+            <artifactId>gexin-rp-sdk-http</artifactId>
+            <version>4.1.1.0</version>
+        </dependency>
+
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>goeasy</id>
+            <name>goeasy</name>
+            <url>http://maven.goeasy.io/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>getui-nexus</id>
+            <url>http://mvn.gt.igexin.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -104,5 +141,7 @@
 
         </plugins>
     </build>
+
+
 
 </project>

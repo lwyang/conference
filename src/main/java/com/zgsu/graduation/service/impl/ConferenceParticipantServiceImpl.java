@@ -4,7 +4,9 @@ import com.zgsu.graduation.enums.ErrorEnum;
 import com.zgsu.graduation.mapper.ConferenceParticipantMapper;
 import com.zgsu.graduation.model.ConferenceParticipant;
 import com.zgsu.graduation.service.ConferenceParticipantService;
+import io.goeasy.GoEasy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 public class ConferenceParticipantServiceImpl implements ConferenceParticipantService {
     @Autowired
     private ConferenceParticipantMapper conferenceParticipantMapper;
+
 
     @Override
     public ErrorEnum inviteParticipants( Integer conconferenceId, List<Integer> participants) {
@@ -24,6 +27,9 @@ public class ConferenceParticipantServiceImpl implements ConferenceParticipantSe
                 return ErrorEnum.FAILURE;
             }
         }
+        GoEasy goEasy=new GoEasy("http://rest-hangzhou.goeasy.io/publish","BC-fd94510bceb2485fa37fe7caaeb06b27");
+        goEasy.publish(Integer.toString(conconferenceId),"邀请你参与会议");
         return ErrorEnum.SUCCESS;
     }
 }
+

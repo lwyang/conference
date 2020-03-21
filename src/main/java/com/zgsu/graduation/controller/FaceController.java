@@ -2,7 +2,6 @@ package com.zgsu.graduation.controller;
 
 import com.zgsu.graduation.Vo.ResultVo;
 import com.zgsu.graduation.Vo.UserInfoVo;
-import com.zgsu.graduation.model.UserInfo;
 import com.zgsu.graduation.service.UserService;
 import com.zgsu.graduation.utils.FaceEngineUtil;
 import com.zgsu.graduation.utils.ResultMsgUtil;
