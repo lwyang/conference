@@ -30,7 +30,10 @@ public class ConferenceAppointmentServiceImpl implements ConferenceAppointmentSe
         return conferenceAppointmentMapper.showAppointMentTime(id, date,now);
     }
 
-
+    @Override
+    public List<ConferenceAppointment> selectByTimeAndRoomId(Integer roomId, String date, Time time) {
+        return conferenceAppointmentMapper.selectByTimeAndRoomId(roomId,date,time);
+    }
 
 
 }

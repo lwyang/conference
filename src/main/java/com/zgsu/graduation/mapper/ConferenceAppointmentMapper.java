@@ -118,4 +118,6 @@ public interface ConferenceAppointmentMapper {
             "(start_time<=#{endTime} and end_time>=#{endTime}) or" +
             "(start_time>=#{startTime} and end_time<=#{endTime}))")
     List<ConferenceAppointment> showAppointment(@Param("roomId") Integer roomId, @Param("date") String date, @Param("startTime") Time startTime, @Param("endTime") Time endTime);
+@Select("select * from conference_appointment where room_id=#{roomId} and `date`=#{date} and start_time<=#{time} and end_time>=#{time}")
+    List<ConferenceAppointment> selectByTimeAndRoomId(@Param("rommId")Integer roomId,@Param("date")String date,@Param("time") Time time);
 }

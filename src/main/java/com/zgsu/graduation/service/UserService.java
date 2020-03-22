@@ -65,4 +65,6 @@ public interface UserService {
     List<Map<String, Object>> showUserByDepartmentId(Integer id);
 
     ErrorEnum updateUserDepartment(Integer userId, Integer departmentId);
+
+    List<Map<String,Object>> showFaceInfo();
 }

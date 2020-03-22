@@ -142,4 +142,9 @@ public class UserServiceImpl implements UserService {
         int result = userInfoMapper.updateDepartment(userId, departmentId);
         return result == 1 ? ErrorEnum.SUCCESS : ErrorEnum.FAILURE;
     }
+
+    @Override
+    public List<Map<String, Object>> showFaceInfo() {
+        return userInfoMapper.showFaceInfo();
+    }
 }

@@ -23,6 +23,15 @@ public class AppPushUtil {
     private static String CID = "473873f7be2b4d74a05a968c330a44e5";
 
     /**
+     * 初始化IGtPush对象
+     * @return
+     */
+    public static IGtPush getPush(){
+        IGtPush push = new IGtPush(url, appKey, masterSecret);
+        return push;
+    }
+
+    /**
      * 设置推送标题、推送内容、响铃、震动等推送效果
      *
      * @param content 通知栏内容
@@ -52,7 +61,7 @@ public class AppPushUtil {
     }
 
     /**
-     * 给指定用户推送消息
+     * 给指定用户(cid)推送消息
      * @param push
      * @param template
      * @param cidList
@@ -71,6 +80,31 @@ public class AppPushUtil {
             Target target = new Target();
             target.setAppId(appId);
             target.setClientId(cid);
+            targets.add(target);
+        }
+        return push.pushMessageToList(taskId, targets);
+    }
+
+    /**
+     * 给指定用户(alias)推送消息
+     * @param push
+     * @param aliasList
+     * @param template
+     * @return
+     */
+    public static IPushResult listPush(IGtPush push, List<String> aliasList,NotificationTemplate template) {
+        ListMessage message = new ListMessage();
+        message.setData(template);
+        //设置消息离线，并设置离线时间
+        message.setOffline(true);
+        message.setOfflineExpireTime(24 * 1000 * 3600);
+        //taskId用于在推送时去查找对应的message
+        String taskId = push.getContentId(message);
+        List targets = new ArrayList();
+        for (String alias : aliasList) {
+            Target target = new Target();
+            target.setAppId(appId);
+            target.setAlias(alias);
             targets.add(target);
         }
         return push.pushMessageToList(taskId, targets);

@@ -106,12 +106,15 @@ public interface RoomMapper {
      * This method corresponds to the database table room
      *
      * @mbg.generated Wed Feb 12 16:20:38 CST 2020
-*/
+     */
 
     int updateByPrimaryKey(Room record);
 
     @Select("select id,name,capacity,audio,mike,projector,address,picture,state from room")
     List<RoomVo> showRoomList();
+
+    @Select("select id from room where serial_number=#{serialNumber}")
+    Integer selectIdBySerialNumber(@Param("serialNumber") String serialNumber);
 
 //    List<RoomVo> selectRoomByConditions(@Param("capacity") Integer capacity, @Param("audio") Boolean audio,
 //                                        @Param("mike") Boolean mike);

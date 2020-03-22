@@ -12,19 +12,20 @@ import com.arcsoft.face.enums.ErrorInfo;
 public class FaceEngineUtil {
     public static FaceEngine initEngine() {
 
-       // String appId = "EYasL2ZscmdxAn76YqB3NxVpXFWapNY4Cz9jA7DNeHV8";
-        //String sdkKey = "CMneYzqghsWAXK9i43A5Lmq33oW46waR8LZGHucVyChG";
-
+        String appId = "EYasL2ZscmdxAn76YqB3NxVpXFWapNY4Cz9jA7DNeHV8";
+        String sdkKey = "CMneYzqghsWAXK9i43A5Lmq33oW46waR8LZGHucVyChG";
         FaceEngine faceEngine = new FaceEngine("D:\\arcsoft_lib");
+        //FaceEngine faceEngine = new FaceEngine("arcsoft_lib");
         //String path=System.getProperty("user.dir");
-        //FaceEngine faceEngine = new FaceEngine(path+" \\src\\main\\resources\\arcsoft_lib");
+        //System.out.println(path);
+        //FaceEngine faceEngine = new FaceEngine(path+"\\src\\main\\resources\\arcsoft_lib");
 
-        //激活引擎
-//         int activeCode = faceEngine.activeOnline(appId, sdkKey);
-//
-//         if (activeCode != ErrorInfo.MOK.getValue() && activeCode != ErrorInfo.MERR_ASF_ALREADY_ACTIVATED.getValue()) {
-//            System.out.println("引擎激活失败");
-//        }
+       // 激活引擎
+         int activeCode = faceEngine.activeOnline(appId, sdkKey);
+
+         if (activeCode != ErrorInfo.MOK.getValue() && activeCode != ErrorInfo.MERR_ASF_ALREADY_ACTIVATED.getValue()) {
+            System.out.println("引擎激活失败");
+        }
 
 
         //引擎配置
@@ -48,7 +49,7 @@ public class FaceEngineUtil {
         int initCode = faceEngine.init(engineConfiguration);
 
         if (initCode != ErrorInfo.MOK.getValue()) {
-            System.out.println("初始化引擎失败");
+            System.out.println(initCode+"初始化引擎失败");
         }
         return faceEngine;
     }

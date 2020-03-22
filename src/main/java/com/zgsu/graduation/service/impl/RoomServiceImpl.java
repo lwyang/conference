@@ -60,4 +60,9 @@ public class RoomServiceImpl implements RoomService {
         room.setPicture(room.getPicture().replace("C:\\room_picture","http:\\120.26.48.169:8081"));
         return room;
     }
+
+    @Override
+    public Integer selectIdBySerialNumber(String serialNumber) {
+        return roomMapper.selectIdBySerialNumber(serialNumber);
+    }
 }

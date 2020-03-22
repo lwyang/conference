@@ -7,6 +7,7 @@ import com.zgsu.graduation.service.ConferenceAppointmentService;
 import com.zgsu.graduation.service.ConferenceParticipantService;
 import com.zgsu.graduation.utils.ResultMsgUtil;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,8 +42,9 @@ public class ConferenceAppointmentController {
     @ApiOperation("邀请参会者")
     @PostMapping("/participants")
     public ResultVo inviteParticipants(@RequestParam("conferenceId") Integer conconferenceId,
+                                       @RequestParam("initiatorId") Integer initiatorId,
                                        @RequestParam("participants") List<Integer> participants) {
-        ErrorEnum errorEnum = conferenceParticipantService.inviteParticipants(conconferenceId, participants);
+        ErrorEnum errorEnum = conferenceParticipantService.inviteParticipants(conconferenceId, initiatorId,participants);
         if (errorEnum.getCode().equals(200)) {
             return ResultMsgUtil.success();
         } else {

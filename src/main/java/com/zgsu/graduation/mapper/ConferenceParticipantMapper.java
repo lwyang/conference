@@ -2,7 +2,9 @@ package com.zgsu.graduation.mapper;
 
 import com.zgsu.graduation.model.ConferenceParticipant;
 import com.zgsu.graduation.model.ConferenceParticipantExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
@@ -108,4 +110,8 @@ public interface ConferenceParticipantMapper {
 
     @Select("select last_insert_id()")
     int selectLastId();
+
+    //根据会议id查找参会者的idlist
+    @Select("select participant from conference+participant where conference_id=#{conferenceId}")
+    List<Integer> selectByConferenceId(@Param("conferenceId") Integer conferenceId);
 }

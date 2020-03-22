@@ -5,6 +5,7 @@ import com.zgsu.graduation.Vo.AppointmentTimeVo;
 import com.zgsu.graduation.model.ConferenceAppointment;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.List;
 
 @Service
@@ -21,6 +22,8 @@ public interface ConferenceAppointmentService {
      * @return
      */
     List<AppointmentTimeVo> showAppointmentTime(Integer id, String date) ;
+
+    List<ConferenceAppointment> selectByTimeAndRoomId(Integer roomId, String date, Time time);
 
 
 

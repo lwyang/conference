@@ -29,4 +29,6 @@ public interface RoomService {
     ErrorEnum deleteRoom(Room room);
 
     Room showRoomById(Integer id);
+
+    Integer selectIdBySerialNumber(String serialNumber);
 }
