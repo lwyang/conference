@@ -25,6 +25,8 @@ public interface ConferenceAppointmentService {
 
     List<ConferenceAppointment> selectByTimeAndRoomId(Integer roomId, String date, Time time);
 
+    Integer showInitiatorIdByConferenceId(Integer conferenceId);
+
 
 
 }

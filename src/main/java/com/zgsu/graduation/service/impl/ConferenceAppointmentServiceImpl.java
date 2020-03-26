@@ -4,6 +4,7 @@ import com.zgsu.graduation.Vo.AppointmentTimeVo;
 import com.zgsu.graduation.mapper.ConferenceAppointmentMapper;
 import com.zgsu.graduation.mapper.ConferenceParticipantMapper;
 import com.zgsu.graduation.model.ConferenceAppointment;
+import com.zgsu.graduation.model.ConferenceAppointmentExample;
 import com.zgsu.graduation.service.ConferenceAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,13 @@ public class ConferenceAppointmentServiceImpl implements ConferenceAppointmentSe
     @Override
     public List<ConferenceAppointment> selectByTimeAndRoomId(Integer roomId, String date, Time time) {
         return conferenceAppointmentMapper.selectByTimeAndRoomId(roomId,date,time);
+    }
+
+    @Override
+    public Integer showInitiatorIdByConferenceId(Integer conferenceId) {
+        ConferenceAppointment conferenceAppointment=conferenceAppointmentMapper.selectByPrimaryKey(conferenceId);
+        Integer initiatorId=conferenceAppointment.getConferenceInitiator();
+        return initiatorId;
     }
 
 

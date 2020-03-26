@@ -31,4 +31,6 @@ public interface RoomService {
     Room showRoomById(Integer id);
 
     Integer selectIdBySerialNumber(String serialNumber);
+
+    ErrorEnum bindSerialNumber(Integer roomId,String serialNumber);
 }

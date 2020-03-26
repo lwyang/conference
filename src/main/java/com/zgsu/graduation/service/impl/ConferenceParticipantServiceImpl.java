@@ -26,7 +26,7 @@ public class ConferenceParticipantServiceImpl implements ConferenceParticipantSe
 
 
     @Override
-    public ErrorEnum inviteParticipants(Integer conconferenceId,Integer initiatorId, List<Integer> participants) {
+    public ErrorEnum inviteParticipants(Integer conconferenceId, Integer initiatorId, List<Integer> participants) {
         List<String> cidList = new ArrayList<>();
         List<String> phoneList = new ArrayList<>();
         for (Integer participant : participants) {
@@ -61,12 +61,12 @@ public class ConferenceParticipantServiceImpl implements ConferenceParticipantSe
         //获取模板对象
         NotificationTemplate template = AppPushUtil.getTemplate();
         //获取会议发起者姓名
-        String name=userInfoMapper.showUserNameById(initiatorId);
+        String name = userInfoMapper.showUserNameById(initiatorId);
         //获取模板样式
-        Style0 style = AppPushUtil.getStyle(name+"发来一个会议邀请");
+        Style0 style = AppPushUtil.getStyle(name + "发来一个会议邀请");
         template.setStyle(style);
-        IPushResult ret=AppPushUtil.listPush(push, template, cidList);
-        if(ret!=null)
+        IPushResult ret = AppPushUtil.listPush(push, template, cidList);
+        if (ret != null)
             System.out.println(ret.getResponse().toString());
         return ErrorEnum.SUCCESS;
     }
@@ -74,6 +74,16 @@ public class ConferenceParticipantServiceImpl implements ConferenceParticipantSe
     @Override
     public List<Integer> selectByConferenceId(Integer conferenceId) {
         return conferenceParticipantMapper.selectByConferenceId(conferenceId);
+    }
+
+    @Override
+    public Integer showState(Integer conferenceId, Integer participantId) {
+        return conferenceParticipantMapper.selectState(conferenceId, participantId);
+    }
+
+    @Override
+    public Integer updateState(Integer conferenceId, Integer participantId, Integer state) {
+        return conferenceParticipantMapper.updateState(conferenceId, participantId, state);
     }
 }
 

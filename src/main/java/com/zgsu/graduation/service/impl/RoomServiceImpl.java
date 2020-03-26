@@ -24,22 +24,22 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public ErrorEnum addRoom(Room room, MultipartFile file) throws IOException {
-        if(!file.isEmpty()){
-            BufferedOutputStream out=new BufferedOutputStream(new FileOutputStream(new File("C:\\room_picture\\"+room.getName()+".jpg")));
+        if (!file.isEmpty()) {
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(new File("C:\\room_picture\\" + room.getName() + ".jpg")));
             out.write(file.getBytes());
             out.flush();
             out.close();
-            String picture="C:\\room_picture\\"+room.getName()+".jpg";
+            String picture = "C:\\room_picture\\" + room.getName() + ".jpg";
             room.setPicture(picture);
         }
-        return roomMapper.insert(room)==1?ErrorEnum.SUCCESS:ErrorEnum.FAILURE;
+        return roomMapper.insert(room) == 1 ? ErrorEnum.SUCCESS : ErrorEnum.FAILURE;
     }
 
     @Override
     public List<RoomVo> showRoomList() {
-        List<RoomVo> roomVoList=roomMapper.showRoomList();
-        for(RoomVo roomVo:roomVoList){
-            roomVo.setPicture(roomVo.getPicture().replace("C:\\room_picture","http:\\120.26.48.169:8081"));
+        List<RoomVo> roomVoList = roomMapper.showRoomList();
+        for (RoomVo roomVo : roomVoList) {
+            roomVo.setPicture(roomVo.getPicture().replace("C:\\room_picture", "http:\\120.26.48.169:8081"));
         }
         return roomVoList;
     }
@@ -56,13 +56,24 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room showRoomById(Integer id) {
-        Room room=roomMapper.selectByPrimaryKey(id);
-        room.setPicture(room.getPicture().replace("C:\\room_picture","http:\\120.26.48.169:8081"));
+        Room room = roomMapper.selectByPrimaryKey(id);
+        room.setPicture(room.getPicture().replace("C:\\room_picture", "http:\\120.26.48.169:8081"));
         return room;
     }
 
     @Override
     public Integer selectIdBySerialNumber(String serialNumber) {
         return roomMapper.selectIdBySerialNumber(serialNumber);
+    }
+
+    @Override
+    public ErrorEnum bindSerialNumber(Integer roomId, String serialNumber) {
+        Integer result=roomMapper.bindSerialNumber(roomId, serialNumber);
+        if(result==0){
+            return ErrorEnum.BIND_FAILURE;
+        }else{
+            return ErrorEnum.SUCCESS;
+        }
+
     }
 }

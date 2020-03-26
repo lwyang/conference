@@ -1,5 +1,7 @@
 package com.zgsu.graduation.controller;
 
+import com.arcsoft.face.FaceEngine;
+import com.zgsu.graduation.Vo.FaceInfoVo;
 import com.zgsu.graduation.Vo.ResultVo;
 import com.zgsu.graduation.Vo.UserInfoVo;
 import com.zgsu.graduation.model.ConferenceAppointment;
@@ -12,10 +14,7 @@ import com.zgsu.graduation.utils.ResultMsgUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -23,6 +22,7 @@ import java.util.*;
 
 @RestController
 public class FaceController {
+    private static final Integer SIGIN_TRUE = 3;//已签到
     @Autowired
     private UserService userService;
     @Autowired
@@ -32,13 +32,23 @@ public class FaceController {
     @Autowired
     private ConferenceParticipantService conferenceParticipantService;
 
+
     @ApiOperation(value = "门禁人脸识别")
     @PostMapping("/face")
-    public ResultVo faceCompare(@RequestParam("faceFeature") byte[] faceFeature, @RequestParam("serialNumber") String serialNumber) {
+    public ResultVo faceCompare(@RequestBody FaceInfoVo faceInfoVo) {
+        //@RequestParam("faceFeature") String faceFeature, @RequestParam(value = "serialNumber",required = false) String serialNumber
+        byte[] faceFeatures = faceInfoVo.getFaceFeature();
+        String serialNumber=faceInfoVo.getSerialNumber();
+        //byte[] faceFeatures = faceFeature.getBytes();
+        //System.out.println("长度"+faceFeatures.length+"---"+faceFeatures.toString());
         List<Map<String, Object>> faceInfoList = userService.showFaceInfo();
         Map<String, Object> result = new HashMap<>();
+        FaceEngine faceEngine = FaceEngineUtil.initEngine();
         for (Map<String, Object> map : faceInfoList) {
-            Float companyResult = FaceEngineUtil.faceCompany(FaceEngineUtil.initEngine(), faceFeature, (byte[]) map.get("face_feature"));
+            //System.out.println(Arrays.toString((byte[]) map.get("face_feature")));
+           // System.out.println(((byte[]) map.get("face_feature")).length);
+            Float companyResult = FaceEngineUtil.faceCompany(faceEngine, faceFeatures, (byte[]) map.get("face_feature"));
+            //System.out.println("相似度" + companyResult);
             if (companyResult >= 0.8) {
                 //人脸识别为管理员，打开门禁（管理员可打开所有门禁）
                 if (map.get("role").equals("管理员")) {
@@ -48,7 +58,7 @@ public class FaceController {
                     return ResultMsgUtil.success(result);
                     //人脸识别结果为用户，进一步判断
                 } else {
-                    //获取用户id
+                    //获取人脸比对成功者的id
                     Integer userId = (Integer) map.get("id");
                     //获取该设备对应会议室id
                     Integer roomId = roomService.selectIdBySerialNumber(serialNumber);
@@ -68,13 +78,34 @@ public class FaceController {
                     } else {
                         //获取会议id
                         Integer conferenceId = conferenceAppointmentList.get(0).getId();
+                        //根据y会议id查找会议发起者id
+                        Integer initiatorId = conferenceAppointmentService.showInitiatorIdByConferenceId(conferenceId);
+                        //根据会议id获取参会者
                         List<Integer> participantList = conferenceParticipantService.selectByConferenceId(conferenceId);
-                        for(Integer participant: participantList){
-                            if(participant.equals(userId)){
+                        for (Integer participant : participantList) {
+                            if (participant.equals(userId)) {
                                 result.put("role", "用户");
                                 result.put("pass", true);
-                                result.put("message", "人脸识别成功");
-                                return ResultMsgUtil.success(result);
+                                //若用户首次扫脸，提示签到成功
+                                if (conferenceParticipantService.showState(conferenceId, participant) != SIGIN_TRUE) {
+                                    Integer siginResult = conferenceParticipantService.updateState(conferenceId, participant, SIGIN_TRUE);
+                                    //数据库状态修改失败
+                                    if (siginResult == 0) {
+                                        result.put("message", "数据库状态修改失败");
+                                    } else {
+                                        result.put("message", "签到成功，请进入");
+                                    }
+                                    return ResultMsgUtil.success(result);
+                                    //若已签到，提示已签到
+                                } else {
+                                    if(userId.equals(initiatorId)){
+                                        result.put("message","是否签退");
+                                    }else{
+                                        result.put("message", "您已经签到过了，请进入");
+                                    }
+                                    return ResultMsgUtil.success(result);
+                                }
+
                             }
                         }
                         result.put("role", "用户");
@@ -90,7 +121,6 @@ public class FaceController {
         result.put("pass", false);
         result.put("message", "系统无法查找到您的信息");
         Calendar calendar = Calendar.getInstance();
-
         // UserInfoVo userInfoVo = userService.showUser(12);
         // Float result = FaceEngineUtil.faceCompany(FaceEngineUtil.initEngine(), faceFeature, userInfoVo.getFaceFeature());
         return ResultMsgUtil.success(result);

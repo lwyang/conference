@@ -19,13 +19,18 @@ public class FaceEngineUtil {
         //String path=System.getProperty("user.dir");
         //System.out.println(path);
         //FaceEngine faceEngine = new FaceEngine(path+"\\src\\main\\resources\\arcsoft_lib");
+        //判断引擎是否激活
+        ActiveFileInfo activeFileInfo = new ActiveFileInfo();
+        int judgeCode = faceEngine.getActiveFileInfo(activeFileInfo);
+        if(judgeCode!=ErrorInfo.MERR_ASF_ALREADY_ACTIVATED.getValue()){
+            int activeCode = faceEngine.activeOnline(appId, sdkKey);
 
-       // 激活引擎
-         int activeCode = faceEngine.activeOnline(appId, sdkKey);
-
-         if (activeCode != ErrorInfo.MOK.getValue() && activeCode != ErrorInfo.MERR_ASF_ALREADY_ACTIVATED.getValue()) {
-            System.out.println("引擎激活失败");
+            if (activeCode != ErrorInfo.MOK.getValue() && activeCode != ErrorInfo.MERR_ASF_ALREADY_ACTIVATED.getValue()) {
+                System.out.println("引擎激活失败");
+            }
         }
+        // 激活引擎
+
 
 
         //引擎配置
@@ -49,13 +54,14 @@ public class FaceEngineUtil {
         int initCode = faceEngine.init(engineConfiguration);
 
         if (initCode != ErrorInfo.MOK.getValue()) {
-            System.out.println(initCode+"初始化引擎失败");
+            System.out.println(initCode + "初始化引擎失败");
         }
         return faceEngine;
     }
 
     /**
      * 对边两个人脸特征值
+     *
      * @param faceEngine
      * @param targetFeatureData
      * @param sourceFeatureData
@@ -64,6 +70,7 @@ public class FaceEngineUtil {
     public static float faceCompany(FaceEngine faceEngine, byte[] targetFeatureData, byte[] sourceFeatureData) {
         FaceFeature targetFaceFeature = new FaceFeature();
         targetFaceFeature.setFeatureData(targetFeatureData);
+        //targetFaceFeature.setFeatureData(sourceFeatureData);
         FaceFeature sourceFaceFeature = new FaceFeature();
         sourceFaceFeature.setFeatureData(sourceFeatureData);
         FaceSimilar faceSimilar = new FaceSimilar();

@@ -5,8 +5,10 @@ import com.zgsu.graduation.model.ConferenceParticipantExample;
 
 import java.util.List;
 
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 
@@ -113,5 +115,10 @@ public interface ConferenceParticipantMapper {
 
     //根据会议id查找参会者的idlist
     @Select("select participant from conference+participant where conference_id=#{conferenceId}")
-    List<Integer> selectByConferenceId(@Param("conferenceId") Integer conferenceId);
+    List<Integer> selectByConferenceId(@Param("conferenceId")Integer conferenceId);
+
+    @Select("select state from conference_participant where conference_id=#{conferenceId} and participant=#{participantId}")
+    Integer selectState(@Param("conferenceId")Integer conferenceId,@Param("participantId") Integer participantId);
+    @Update("update conference_participant set state=#{state} where conference_id=#{conferenceId} and participant=#{participantId}")
+    Integer updateState(@Param("conferenceId")Integer conferenceId,@Param("participantId") Integer participantId,@Param("state")Integer state);
 }

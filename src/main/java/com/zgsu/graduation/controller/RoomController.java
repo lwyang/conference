@@ -61,13 +61,23 @@ public class RoomController {
 
     @ApiOperation(value = "根据id获取会议室详细信息")
     @GetMapping("/room/id")
-    public ResultVo getRoomById(@RequestParam("id") Integer id, @RequestParam("date") String date)  {
+    public ResultVo getRoomById(@RequestParam("id") Integer id, @RequestParam("date") String date) {
         Room room = roomService.showRoomById(id);
         List<AppointmentTimeVo> appointmentTimeVos = conferenceAppointmentService.showAppointmentTime(id, date);
         Map<String, Object> map = new HashMap<>();
         map.put("room", room);
         map.put("time", appointmentTimeVos);
         return ResultMsgUtil.success(map);
+    }
+
+    @ApiOperation(value = "会议室绑定会议室前端设备")
+    @PostMapping("/room/serialNumber")
+    public ResultVo bindSerialNumber(@RequestParam("serialNumber") String serialNumber, @RequestParam("roomId") Integer roomId) {
+        ErrorEnum errorEnum=roomService.bindSerialNumber(roomId, serialNumber);
+        if(errorEnum.getCode()==200){
+            return ResultMsgUtil.success("设备绑定成功");
+        }
+        return ResultMsgUtil.error(errorEnum.getCode(),errorEnum.getMsg());
     }
 //    @InitBinder
 //    public void initBinder(WebDataBinder binder, WebRequest request){

@@ -11,7 +11,7 @@ public interface DepartmentService {
      * 添加部门
      * @return
      */
-    ErrorEnum addDepartment(Department department);
+    ErrorEnum addDepartment(String departmentName);
 
     /**
      * 显示部门列表
