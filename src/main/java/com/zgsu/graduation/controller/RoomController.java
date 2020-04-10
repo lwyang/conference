@@ -12,16 +12,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,13 +53,19 @@ public class RoomController {
         return ResultMsgUtil.success(roomVoList);
     }
 
-    @ApiOperation(value = "根据id获取会议室详细信息")
+    @ApiOperation(value = "根据会议室id获取会议室详细信息")
     @GetMapping("/room/id")
-    public ResultVo getRoomById(@RequestParam("id") Integer id, @RequestParam("date") String date) {
+    public ResultVo getRoomById(@RequestParam("id") Integer id) {
         Room room = roomService.showRoomById(id);
-        List<AppointmentTimeVo> appointmentTimeVos = conferenceAppointmentService.showAppointmentTime(id, date);
         Map<String, Object> map = new HashMap<>();
         map.put("room", room);
+        return ResultMsgUtil.success(map);
+    }
+    @ApiOperation(value="查看某会议室某天占用情况,返回已被预约时间段")
+    @GetMapping("/room/time")
+    public ResultVo getRoomTime(@RequestParam("roomId") Integer roomId, @RequestParam("date") String date) {
+        List<AppointmentTimeVo> appointmentTimeVos = conferenceAppointmentService.showAppointmentTime(roomId, date);
+        Map<String, Object> map = new HashMap<>();
         map.put("time", appointmentTimeVos);
         return ResultMsgUtil.success(map);
     }

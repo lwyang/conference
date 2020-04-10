@@ -14,4 +14,6 @@ public interface ConferenceRcdService {
     List<RoomVo> conferenceCommend(AppointmentConditions appointmentConditions) throws ParseException;
 
     ErrorEnum addRcdConditions(AppointmentConditions appointmentConditions);
+
+    ErrorEnum evaluateRoom(Integer conferenceId,Integer participantId,Float mark,String evaluate);
 }

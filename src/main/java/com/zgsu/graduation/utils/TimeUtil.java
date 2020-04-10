@@ -66,4 +66,20 @@ public class TimeUtil {
         }
         return time;
     }
+
+    /**
+     * 根据用户延迟行为设置会议结束时间
+     * @return
+     */
+    public static Time delayTime(Time time,Integer delay){
+        if(delay<=15&&delay>0){
+            delay=15;
+        }else if(delay>15&&delay<=30){
+            delay=30;
+        }else if(delay>30&&delay<45){
+            delay=45;
+        }
+        time.setTime(time.getTime()+ delay*60*1000);
+        return time;
+    }
 }

@@ -11,6 +11,7 @@ import io.goeasy.GoEasy;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -100,9 +101,10 @@ public class UserInfoController {
 
     @GetMapping("/test")
     public String test(@RequestParam("name") String name) {
-        GoEasy goEasy=new GoEasy("http://rest-hangzhou.goeasy.io/publish","BC-fd94510bceb2485fa37fe7caaeb06b27");
-        goEasy.publish("test","hello");
-        return "hello" + name;
+        throw new NullPointerException();
+//        GoEasy goEasy=new GoEasy("http://rest-hangzhou.goeasy.io/publish","BC-fd94510bceb2485fa37fe7caaeb06b27");
+//        goEasy.publish("test","hello");
+       // return "hello" + name;
 
     }
 

@@ -67,4 +67,8 @@ public interface UserService {
     ErrorEnum updateUserDepartment(Integer userId, Integer departmentId);
 
     List<Map<String,Object>> showFaceInfo();
+
+    UserInfo login(String account,String password);
+
+    UserInfo findUserById(Integer userId);
 }

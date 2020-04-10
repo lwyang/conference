@@ -3,16 +3,14 @@ package com.zgsu.graduation.controller;
 import com.arcsoft.face.FaceEngine;
 import com.zgsu.graduation.Vo.FaceInfoVo;
 import com.zgsu.graduation.Vo.ResultVo;
-import com.zgsu.graduation.Vo.UserInfoVo;
+import com.zgsu.graduation.enums.ErrorEnum;
 import com.zgsu.graduation.model.ConferenceAppointment;
-import com.zgsu.graduation.service.ConferenceAppointmentService;
-import com.zgsu.graduation.service.ConferenceParticipantService;
-import com.zgsu.graduation.service.RoomService;
-import com.zgsu.graduation.service.UserService;
+import com.zgsu.graduation.service.*;
 import com.zgsu.graduation.utils.FaceEngineUtil;
 import com.zgsu.graduation.utils.ResultMsgUtil;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +29,8 @@ public class FaceController {
     private ConferenceAppointmentService conferenceAppointmentService;
     @Autowired
     private ConferenceParticipantService conferenceParticipantService;
+    @Autowired
+    private FaceService faceService;
 
 
     @ApiOperation(value = "门禁人脸识别")
@@ -38,7 +38,7 @@ public class FaceController {
     public ResultVo faceCompare(@RequestBody FaceInfoVo faceInfoVo) {
         //@RequestParam("faceFeature") String faceFeature, @RequestParam(value = "serialNumber",required = false) String serialNumber
         byte[] faceFeatures = faceInfoVo.getFaceFeature();
-        String serialNumber=faceInfoVo.getSerialNumber();
+        String serialNumber = faceInfoVo.getSerialNumber();
         //byte[] faceFeatures = faceFeature.getBytes();
         //System.out.println("长度"+faceFeatures.length+"---"+faceFeatures.toString());
         List<Map<String, Object>> faceInfoList = userService.showFaceInfo();
@@ -46,10 +46,11 @@ public class FaceController {
         FaceEngine faceEngine = FaceEngineUtil.initEngine();
         for (Map<String, Object> map : faceInfoList) {
             //System.out.println(Arrays.toString((byte[]) map.get("face_feature")));
-           // System.out.println(((byte[]) map.get("face_feature")).length);
+            // System.out.println(((byte[]) map.get("face_feature")).length);
             Float companyResult = FaceEngineUtil.faceCompany(faceEngine, faceFeatures, (byte[]) map.get("face_feature"));
             //System.out.println("相似度" + companyResult);
             if (companyResult >= 0.8) {
+                result.put("userId", map.get("id"));
                 //人脸识别为管理员，打开门禁（管理员可打开所有门禁）
                 if (map.get("role").equals("管理员")) {
                     result.put("role", "管理员");
@@ -98,9 +99,9 @@ public class FaceController {
                                     return ResultMsgUtil.success(result);
                                     //若已签到，提示已签到
                                 } else {
-                                    if(userId.equals(initiatorId)){
-                                        result.put("message","是否签退");
-                                    }else{
+                                    if (userId.equals(initiatorId)) {
+                                        result.put("message", "是否签退");
+                                    } else {
                                         result.put("message", "您已经签到过了，请进入");
                                     }
                                     return ResultMsgUtil.success(result);
@@ -124,5 +125,19 @@ public class FaceController {
         // UserInfoVo userInfoVo = userService.showUser(12);
         // Float result = FaceEngineUtil.faceCompany(FaceEngineUtil.initEngine(), faceFeature, userInfoVo.getFaceFeature());
         return ResultMsgUtil.success(result);
+    }
+
+    @ApiOperation(value = "发起者会议签退")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "conferenceId", value = "会议id", required = true, paramType = "query")
+    })
+    @PostMapping("/signOff")
+    public ResultVo signOff(@RequestParam("userId") Integer userId, @RequestParam("conferenceId") Integer conferenceId) {
+        ErrorEnum errorEnum = faceService.signOff(userId, conferenceId);
+        if (errorEnum.getCode() == 200) {
+            return ResultMsgUtil.success();
+        }
+        return ResultMsgUtil.error(errorEnum.getCode(), errorEnum.getMsg());
     }
 }

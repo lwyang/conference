@@ -1,7 +1,9 @@
 package com.zgsu.graduation.service;
 
+import com.zgsu.graduation.Vo.AllConferenceVo;
 import com.zgsu.graduation.Vo.AppointmentTimeVo;
 
+import com.zgsu.graduation.Vo.TodayConferenceVo;
 import com.zgsu.graduation.model.ConferenceAppointment;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,12 @@ public interface ConferenceAppointmentService {
     List<ConferenceAppointment> selectByTimeAndRoomId(Integer roomId, String date, Time time);
 
     Integer showInitiatorIdByConferenceId(Integer conferenceId);
+
+    Integer avgDelay(Integer userId);
+
+    List<TodayConferenceVo> showTodayConference(Integer userId,String date);
+
+    List<AllConferenceVo> showAllConferenceByUserId(Integer userId);
 
 
 

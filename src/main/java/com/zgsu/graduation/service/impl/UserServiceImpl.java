@@ -98,6 +98,10 @@ public class UserServiceImpl implements UserService {
             return ErrorEnum.NO_DEPARTMENT;
         }
         userInfo.setGender(userInfoVo.getGender().equals("男") ? false : true);
+        Date now = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        // simpleDateFormat.format(now);
+        userInfo.setUpdateTime(now);
 
         int result = userInfoMapper.updateByPrimaryKeySelective(userInfo);
         return result == 1 ? ErrorEnum.SUCCESS : ErrorEnum.UPDATE_FAILURE;
@@ -146,5 +150,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Map<String, Object>> showFaceInfo() {
         return userInfoMapper.showFaceInfo();
+    }
+
+    @Override
+    public UserInfo login(String account, String password) {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andPhoneEqualTo(account);
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
+        if (userInfos.size() > 0)
+            return userInfos.get(0);
+        return null;
+    }
+
+    @Override
+    public UserInfo findUserById(Integer userId) {
+        return userInfoMapper.selectByPrimaryKey(userId);
     }
 }
